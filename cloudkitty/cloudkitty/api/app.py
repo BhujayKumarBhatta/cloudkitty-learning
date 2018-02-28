@@ -2,7 +2,7 @@ import os
 import pecan
 from pecan import make_app
 from pecan.deploy import deploy as pecan_deploy
-from paste import deploy as paste_deploy
+#from paste import deploy as paste_deploy
 
 #from cloudkitty.api.v1 import datamodels
 from cloudkitty import config as api_config
@@ -36,30 +36,27 @@ def get_pecan_config():
     filename = api_config.__file__.replace('.pyc', '.py')
     return pecan.configuration.conf_from_file(filename)
 
-def setup_app():   
-    
+def setup_app(pecan_config=None, extra_hooks=None):    
     app_conf = get_pecan_config()
-
     app = make_app(
         app_conf.app.root,
-        logging=getattr(config, 'logging', {}),
-        **app_conf
+        logging=getattr(app_conf, 'logging', {}),        
     )
     return app
 
 def load_app():
-    cfg_file = None
-    cfg_path = cfg.CONF.api_paste_config
-    if not os.path.isabs(cfg_path):
-        cfg_file = CONF.find_file(cfg_path)
-    elif os.path.exists(cfg_path):
-        cfg_file = cfg_path
-
-    if not cfg_file:
-        raise cfg.ConfigFilesNotFoundError([cfg.CONF.api_paste_config])
-    LOG.info("Full WSGI config used %s", cfg_file)
-    LOG.info("api paste configutartion file name %s"  %cfg.CONF.api_paste_config)
-    appname = "cloudkitty"
+#     cfg_file = None
+#     cfg_path = cfg.CONF.api_paste_config
+#     if not os.path.isabs(cfg_path):
+#         cfg_file = CONF.find_file(cfg_path)
+#     elif os.path.exists(cfg_path):
+#         cfg_file = cfg_path
+# 
+#     if not cfg_file:
+#         raise cfg.ConfigFilesNotFoundError([cfg.CONF.api_paste_config])
+#     LOG.info("Full WSGI config used %s", cfg_file)
+#     LOG.info("api paste configutartion file name %s"  %cfg.CONF.api_paste_config)
+#     appname = "cloudkitty"
     filename = api_config.__file__.replace('.pyc', '.py')
     return pecan_deploy(filename)
 
